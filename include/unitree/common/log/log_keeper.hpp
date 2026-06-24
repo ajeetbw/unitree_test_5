@@ -2,6 +2,7 @@
 #define __UT_LOG_FILE_KEEPER_H__
 
 #include <unitree/common/log/log_policy.hpp>
+#include <unitree/common/log/log_writer.hpp>
 
 namespace unitree
 {
@@ -10,30 +11,41 @@ namespace common
 class LogKeeper
 {
 public:
+    enum
+    {
+        ROLLING_WAIT_MICROSEC  = 1000000
+    };
+
     LogKeeper(LogStorePolicyPtr storePolicyPtr);
     ~LogKeeper();
 
-    LogStorePolicyPtr GetStorePolicy() const;
-
-    bool Append(const std::string& s, bool rotate);
+    void SetWriter(LogWriterPtr writerPtr);
+    void AppendDataSize(int64_t len);
 
 private:
-    void Rotate();
+    void Rolling();
 
-    void AppendFile(const std::string& s);
     void OpenFile();
     void CloseFile();
+    bool CheckFile();
 
-    void CheckFileSize();
+    void ThreadRolling();
+
+    bool IsNeedToRolling(int64_t len);
+    void CheckRolling();
 
     std::string MakeRegexExpress();
 
 private:
-    volatile int64_t mFileSize;
+    bool mQuit;
+    int64_t mFileSize;
     std::string mFileName;
     std::string mDirectory;
     FilePtr mFilePtr;
     LogStorePolicyPtr mStorePolicyPtr;
+    LogWriterPtr mWriterPtr;
+    ThreadPtr mThreadPtr;
+    MutexCond mMutexCond;
 };
 
 typedef std::shared_ptr<LogKeeper> LogKeeperPtr;

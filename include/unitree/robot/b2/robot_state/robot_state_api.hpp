@@ -17,7 +17,7 @@ const std::string ROBOT_STATE_SERVICE_NAME = "robot_state";
 /*
  * api version
  */
-const std::string ROBOT_STATE_API_VERSION = "1.0.0.2";
+const std::string ROBOT_STATE_API_VERSION = "1.0.0.1";
 
 /*
  * api id
@@ -25,9 +25,6 @@ const std::string ROBOT_STATE_API_VERSION = "1.0.0.2";
 const int32_t ROBOT_STATE_API_ID_SERVICE_SWITCH = 1001;
 const int32_t ROBOT_STATE_API_ID_SET_REPORT_FREQ = 1002;
 const int32_t ROBOT_STATE_API_ID_SERVICE_LIST = 1003;
-const int32_t ROBOT_STATE_API_ID_LOWPOWER_SWITCH = 1004;
-const int32_t ROBOT_STATE_API_ID_LOWPOWER_STATUS = 1005;
-const int32_t ROBOT_STATE_API_ID_GET_PKG_VERSION  = 1006;
 
 /*
  * request parameter for 1001
@@ -146,87 +143,6 @@ public:
     std::string name;
     int32_t status;
     int32_t protect;
-};
-
-/*
- * request parameter for 1004
- */
-class LowPowerSwitchParameter : public common::Jsonize
-{
-public:
-    LowPowerSwitchParameter() : swit(0)
-    {}
-
-    ~LowPowerSwitchParameter()
-    {}
-
-    void fromJson(common::JsonMap& json)
-    {
-        common::FromJson(json["switch"], swit);
-    }
-
-    void toJson(common::JsonMap& json) const
-    {
-        common::ToJson(swit, json["switch"]);
-    }
-
-public:
-    int32_t swit;
-};
-
-/*
- * response data for 1004
- */
-class LowPowerStatusData : public common::Jsonize
-{
-public:
-    LowPowerStatusData() : status(0)
-    {}
-
-    ~LowPowerStatusData()
-    {}
-
-    void fromJson(common::JsonMap& json)
-    {
-        common::FromJson(json["status"], status);
-    }
-
-    void toJson(common::JsonMap& json) const
-    {
-        common::ToJson(status, json["status"]);
-    }
-
-public:
-    int32_t status;
-};
-
-/*
- * response data for 1006
- */
-class PkgVersionData : public common::Jsonize
-{
-public:
-    PkgVersionData()
-    {}
-
-    ~PkgVersionData()
-    {}
-
-    void fromJson(common::JsonMap& json)
-    {
-        common::FromJson(json["packageVersion"], packageVersion);
-        common::FromJson(json["moduleVersionMap"], moduleVersionMap);
-    }
-
-    void toJson(common::JsonMap& json) const
-    {
-        common::ToJson(packageVersion, json["packageVersion"]);
-        common::ToJson(moduleVersionMap, json["moduleVersionMap"]);
-    }
-
-public:
-    std::string packageVersion;
-    std::map<std::string,std::string> moduleVersionMap;
 };
 
 }

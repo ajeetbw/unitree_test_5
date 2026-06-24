@@ -12,28 +12,32 @@ namespace common
 class LogInitor
 {
 public:
-    explicit LogInitor();
-    ~LogInitor();
+    static LogInitor* Instance()
+    {
+        static LogInitor inst;
+        return &inst;
+    }
 
-    void Init(const std::string& configFileName, bool stdoutDefault = false);
+    void Init(const std::string& configFileName);
     Logger* GetLogger(const std::string& tag);
 
     void Final();
 
+private:
+    LogInitor();
     void ParseConf(Any json);
-    void SetStdoutPolicy();
     void InitLogger();
 
 private:
+    bool mInited;
     std::set<std::string> mStoreNames;
     std::vector<LogPolicyPtr> mPolicis;
     std::vector<LogStorePolicyPtr> mStorePolicis;
     std::map<std::string, LoggerPtr> mLoggerMap;
+    Mutex mLock;
 };
 
-using LogInitorPtr = std::shared_ptr<LogInitor>;
-
-void LogInit(const std::string& configFileName = "", bool stdoutDefault = false);
+void LogInit(const std::string& configFileName = "");
 void LogFinal();
 
 Logger* GetLogger(const std::string& tag);

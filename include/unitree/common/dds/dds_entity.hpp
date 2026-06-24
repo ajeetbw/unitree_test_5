@@ -16,10 +16,9 @@
 
 /*
  * dds wait sub/pub matched default time slice.
- * default 10000 us
+ * default 50000 us
  */
-#define __UT_DDS_WAIT_MATCHED_TIME_SLICE 10000
-#define __UT_DDS_WAIT_MATCHED_TIME_MAX   1000000
+#define __UT_DDS_WAIT_MATCHED_TIME_SLICE 50000
 
 using namespace org::eclipse::cyclonedds;
 
@@ -171,9 +170,9 @@ public:
 
     bool Write(const MSG& message, int64_t waitMicrosec)
     {
-        if (waitMicrosec > 0)
+        if (waitMicrosec > 0 && !WaitReader(waitMicrosec))
         {
-            WaitReader(waitMicrosec);
+            return false;
         }
 
         UT_DDS_EXCEPTION_TRY
@@ -187,24 +186,20 @@ public:
     }
 
 private:
-    void WaitReader(int64_t waitMicrosec)
+    bool WaitReader(int64_t waitMicrosec)
     {
-        if (waitMicrosec < __UT_DDS_WAIT_MATCHED_TIME_SLICE)
+        while (mNative.publication_matched_status().current_count() == 0)
         {
-            return;
-        }
+            if (waitMicrosec <= 0)
+            {
+                return false;
+            }
 
-        int64_t waitTime = (waitMicrosec / 2);
-        if (waitTime > __UT_DDS_WAIT_MATCHED_TIME_MAX)
-        {
-            waitTime = __UT_DDS_WAIT_MATCHED_TIME_MAX;
-        }
-
-        while (waitTime > 0 && mNative.publication_matched_status().current_count() == 0)
-        {
             MicroSleep(__UT_DDS_WAIT_MATCHED_TIME_SLICE);
-            waitTime -=__UT_DDS_WAIT_MATCHED_TIME_SLICE;
+            waitMicrosec -=__UT_DDS_WAIT_MATCHED_TIME_SLICE;
         }
+
+        return true;
     }
 
 private:

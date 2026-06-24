@@ -27,7 +27,6 @@ const int32_t ROBOT_API_ID_LOCO_SET_SWING_HEIGHT = 8103;
 const int32_t ROBOT_API_ID_LOCO_SET_STAND_HEIGHT = 8104;
 const int32_t ROBOT_API_ID_LOCO_SET_VELOCITY = 8105;
 const int32_t ROBOT_API_ID_LOCO_SET_PHASE = 8106;
-const int32_t ROBOT_API_ID_LOCO_SET_ARM_TASK = 8107;
 
 const int32_t ROBOT_API_ID_LOCO_ENABLE_ODOM = 8201;
 const int32_t ROBOT_API_ID_LOCO_DISABLE_ODOM = 8202;
@@ -90,8 +89,8 @@ class JsonizeTargetPos : public common::Jsonize {
   bool relative;
 };
 
-}  // namespace h1
-}  // namespace robot
-}  // namespace unitree
+} // namespace h1
+} // namespace robot
+} // namespace unitree
 
 #endif // __UT_ROBOT_H1_LOCO_API_HPP__

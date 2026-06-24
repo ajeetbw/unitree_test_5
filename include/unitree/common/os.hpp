@@ -54,9 +54,6 @@ public:
     uint64_t GetThreadId();
     int32_t GetTid();
 
-    bool GetNetworkInterfaceIps(std::map<std::string,std::string>& networkInterfaceIpMap);
-    bool GetIps(std::set<std::string>& ips);
-
     void CpuSet(const std::string& cpuIds);
     void CpuSet(uint64_t threadId, size_t cpuId);
 

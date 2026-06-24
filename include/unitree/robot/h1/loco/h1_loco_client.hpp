@@ -10,7 +10,7 @@ namespace unitree {
 namespace robot {
 namespace h1 {
 class LocoClient : public Client {
- public:
+public:
   LocoClient() : Client(LOCO_SERVICE_NAME, false) {}
   ~LocoClient() {}
 
@@ -30,7 +30,7 @@ class LocoClient : public Client {
     UT_ROBOT_CLIENT_REG_API_NO_PROI(ROBOT_API_ID_LOCO_SET_STAND_HEIGHT);
     UT_ROBOT_CLIENT_REG_API_NO_PROI(ROBOT_API_ID_LOCO_SET_VELOCITY);
     UT_ROBOT_CLIENT_REG_API_NO_PROI(ROBOT_API_ID_LOCO_SET_PHASE);
-    UT_ROBOT_CLIENT_REG_API_NO_PROI(ROBOT_API_ID_LOCO_SET_ARM_TASK);
+    UT_ROBOT_CLIENT_REG_API_NO_PROI(ROBOT_API_ID_LOCO_SET_TARGET_POSITION);
 
     UT_ROBOT_CLIENT_REG_API_NO_PROI(ROBOT_API_ID_LOCO_ENABLE_ODOM);
     UT_ROBOT_CLIENT_REG_API_NO_PROI(ROBOT_API_ID_LOCO_DISABLE_ODOM);
@@ -210,16 +210,6 @@ class LocoClient : public Client {
     return Call(ROBOT_API_ID_LOCO_SET_TARGET_POSITION, parameter, data);
   }
 
-  int32_t SetTaskId(int task_id) {
-    std::string parameter, data;
-
-    go2::JsonizeDataInt json;
-    json.data = task_id;
-    parameter = common::ToJsonString(json);
-
-    return Call(ROBOT_API_ID_LOCO_SET_ARM_TASK, parameter, data);
-  }
-
   /*High Level API Call*/
   int32_t Damp() { return SetFsmId(1); }
 
@@ -254,30 +244,11 @@ class LocoClient : public Client {
     return SetPhase(foot ? std::vector<float>({0.f, 1.f}) : std::vector<float>({1.f, 0.f}));
   }
 
-  int32_t WaveHand() { return SetTaskId(0); }
-
-  int32_t ShakeHand(int stage = -1) {
-    switch (stage) {
-      case 0:
-        first_shake_hand_stage_ = false;
-        return SetTaskId(1);
-
-      case 1:
-        first_shake_hand_stage_ = true;
-        return SetTaskId(2);
-
-      default:
-        first_shake_hand_stage_ = !first_shake_hand_stage_;
-        return SetTaskId(first_shake_hand_stage_ ? 2 : 1);
-    }
-  }
-
  private:
   bool continous_move_ = false;
-  bool first_shake_hand_stage_ = true;
 };
-}  // namespace h1
+} // namespace h1
 
-}  // namespace robot
-}  // namespace unitree
+} // namespace robot
+} // namespace unitree
 #endif // __UT_ROBOT_H1_LOCO_CLIENT_HPP__

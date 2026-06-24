@@ -25,7 +25,6 @@
 #include <sys/syscall.h>
 #include <sys/resource.h>
 #include <sys/timerfd.h>
-#include <net/if.h>
 #include <netinet/in.h>
 #include <netdb.h>
 #include <time.h>
@@ -74,9 +73,9 @@
 
 #define UT_DESC_ERR(name) name##_DESC
 
-#ifndef SYS_gettid
-#define SYS_gettid __NR_gettid
-#endif//SYS_gettid
+#if defined(__GLIBC__) and defined(__aarch64__)
+#define gettid() syscall(__NR_gettid)
+#endif
 
 #define UT_SAFE_DEL(x)  \
     if ((x) != NULL) { delete (x); (x) = NULL; }

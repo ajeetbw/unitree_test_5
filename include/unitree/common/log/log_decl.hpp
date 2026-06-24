@@ -11,9 +11,8 @@
 /*
  * log buffer size
  */
-#define UT_LOG_BUFFER_SIZE          65535           //64K-1
-#define UT_LOG_CRT_BUFFER_SIZE      64512           //63K
-#define UT_LOG_MAX_BUFFER_SIZE      4194303         //4M-1
+#define UT_LOG_BUFFER_SIZE          65535           //64K
+#define UT_LOG_MAX_BUFFER_SIZE      8388608         //8M
 /*
  * log file size
  */
@@ -22,18 +21,10 @@
 #define UT_LOG_MIN_FILE_SIZE        UT_LOG_MAX_BUFFER_SIZE
 
 /*
- * log write interval(micro second)
- */
-#define UT_LOG_WRITE_INTER          100000          //100ms
-#define UT_LOG_MAX_WRITE_INTER      1000000         //1s
-#define UT_LOG_MIN_WRITE_INTER      2000            //2ms
-
-/*
  * log file number
  */
-#define UT_LOG_FILE_NUMBER          2
-#define UT_LOG_MAX_FILE_NUMBER      100
-#define UT_LOG_MIN_FILE_NUMBER      UT_LOG_FILE_NUMBER
+#define UT_LOG_FILE_NUMBER          10
+#define UT_LOG_MAX_FILE_NUMBER      1000
 
 #define UT_LOG_FILE_EXT             ".LOG"
 
@@ -166,8 +157,6 @@
 #define UT_LOG_STORE_STDERR             3
 
 #define UT_LOG_STORE_DESC_FILE_ASYNC    "FILEASYNC"
-#define UT_LOG_STORE_DESC_ASYNC_FILE    "ASYNCFILE"
-#define UT_LOG_STORE_DESC_ASYNC         "ASYNC"
 #define UT_LOG_STORE_DESC_FILE          "FILE"
 #define UT_LOG_STORE_DESC_STDOUT        "STDOUT"
 #define UT_LOG_STORE_DESC_STDERR        "STDERR"
@@ -225,9 +214,7 @@ static inline const char* GetLogLevelDesc(int32_t level)
 
 static inline int32_t GetLogStoreType(const std::string& desc)
 {
-    if (desc == UT_LOG_STORE_DESC_FILE_ASYNC ||
-        desc == UT_LOG_STORE_DESC_ASYNC_FILE ||
-        desc == UT_LOG_STORE_DESC_ASYNC)      {
+    if (desc == UT_LOG_STORE_DESC_FILE_ASYNC) {
         return UT_LOG_STORE_FILE_ASYNC;  }
     else if (desc == UT_LOG_STORE_DESC_FILE)  {
         return UT_LOG_STORE_FILE;        }

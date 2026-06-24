@@ -6,12 +6,12 @@
   Cyclone DDS: v0.10.2
 
 *****************************************************************/
-#ifndef DDSCXX_UNITREE_IDL_ROS2_POINTSTAMPED__HPP
-#define DDSCXX_UNITREE_IDL_ROS2_POINTSTAMPED__HPP
+#ifndef DDSCXX_POINTSTAMPED__HPP
+#define DDSCXX_POINTSTAMPED__HPP
 
-#include "unitree/idl/ros2/Point_.hpp"
+#include "Point_.hpp"
 
-#include "unitree/idl/ros2/Header_.hpp"
+#include "Header_.hpp"
 
 
 namespace geometry_msgs
@@ -369,4 +369,4 @@ bool max(S& str, const ::geometry_msgs::msg::dds_::PointStamped_& instance, bool
 } //namespace eclipse
 } //namespace org
 
-#endif // DDSCXX_UNITREE_IDL_ROS2_POINTSTAMPED__HPP
+#endif // DDSCXX_POINTSTAMPED__HPP

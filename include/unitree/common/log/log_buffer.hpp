@@ -10,30 +10,49 @@ namespace common
 class LogBuffer
 {
 public:
-    explicit LogBuffer();
-    virtual ~LogBuffer();
+    LogBuffer();
 
-    virtual bool Append(const std::string& s);
-    virtual bool Get(std::string& s);
-    virtual bool Empty();
+    bool Append(const std::string& s);
 
-protected:
+    const std::string& Get();
+    void Get(std::string& s);
+
+    void Clear();
+
+    bool Empty();
+
+private:
     std::string mData;
 };
 
 typedef std::shared_ptr<LogBuffer> LogBufferPtr;
 
-class LogBlockBuffer : public LogBuffer
+class LogBlockBuffer
 {
 public:
-    explicit LogBlockBuffer();
+    typedef std::shared_ptr<LogBuffer> LOG_BUFFER_PTR;
+
+    LogBlockBuffer();
     ~LogBlockBuffer();
 
     bool Append(const std::string& s);
-    bool Get(std::string& s);
-    bool Empty();
+
+    /*
+     * Get reference of data. [UNSAFE]
+     */
+    const std::string& Get();
+    void Get(std::string& s);
+
+    /*
+     * Clear data.
+     */
+    void Clear(bool lock = false);
+
+    void Exchange();
 
 private:
+    volatile bool mR;
+    std::vector<LOG_BUFFER_PTR> mChain;
     Mutex mLock;
 };
 
